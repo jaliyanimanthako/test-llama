@@ -9,7 +9,6 @@ android {
 
     defaultConfig {
         minSdk 26
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -23,50 +22,43 @@ android {
 
     sourceSets {
         main {
+            java.srcDirs = ['src/main/java']
             jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-//
-//    externalNativeBuild {
-//        cmake {
-//            path = file("src/main/cpp/CMakeLists.txt")
-//            version = "3.22.1"
-//        }
-//    }
 
     ndkVersion = "28.0.13004108"
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.8'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-    implementation 'io.reactivex.rxjava3:rxjava:3.1.8'
-    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
-
-
 }
 
-
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                def component = components.findByName("release")
-                if (component != null) {
-                    from component
-                }
-                groupId = 'com.github.jaliyanimanthako'
-                artifactId = 'llama'
-                version = '1.0.0'
+publishing {
+    publications {
+        release(MavenPublication) {
+            afterEvaluate {
+                from components.release // ✅ works with android.publishing.singleVariant
             }
+            groupId = 'com.github.jaliyanimanthako'
+            artifactId = 'test-llama'
+            version = '1.0.4'
         }
     }
 }
