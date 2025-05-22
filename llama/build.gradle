@@ -59,9 +59,9 @@ afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
-                def releaseComponent = components.findByName("release")
-                if (releaseComponent != null) {
-                    from releaseComponent
+                def component = components.findByName("release")
+                if (component != null) {
+                    from component
                 }
                 groupId = 'com.github.jaliyanimanthako'
                 artifactId = 'llama'
